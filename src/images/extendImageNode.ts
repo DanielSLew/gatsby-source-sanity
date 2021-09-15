@@ -27,6 +27,15 @@ const ImagePlaceholderType = new GraphQLEnumType({
   },
 })
 
+const ImageLayoutType = new GraphQLEnumType({
+  name: `SanityGatsbyImageLayout`,
+  values: {
+    FIXED: {value: `fixed`},
+    FULL_WIDTH: {value: `fullWidth`},
+    CONSTRAINED: {value: `constrained`},
+  },
+})
+
 const extensions = new Map<string, GraphQLFieldConfigMap<any, any>>()
 
 export function extendImageNode(config: PluginConfig): GraphQLFieldConfigMap<any, any> {
@@ -58,6 +67,16 @@ NONE: no placeholder.`,
         fit: {
           type: ImageFitType,
           defaultValue: 'fill',
+        },
+        layout: {
+          type: ImageLayoutType,
+          defaultValue: `constrained`,
+          description: `The layout for the image.
+CONSTRAINED: Resizes to fit its container, up to a maximum width, at which point it will remain fixed in size. 
+FIXED: A static image size, that does not resize according to the screen width
+FULL_WIDTH: The image resizes to fit its container, even if that is larger than the source image.
+Pass a value to "sizes" if the container is not the full width of the screen.
+          `,
         },
       },
     ),
